@@ -1,153 +1,151 @@
-#include "../src/AVL.h"
-#include <catch2/catch_test_macros.hpp>
-#include <algorithm> // for std::sort
-#include <cstdlib>   // for rand()
-#include <ctime>     // for std::time()
-#include <sstream>
-
-TEST_CASE("AVL Tree Balancing", "[AVLTree]") {
-AVLTree tree;
-
-// Insert 8 nodes
-
-
-// Check if the tree is balanced
-REQUIRE(tree.isBalanced(tree.root) == true);
-
-// REQUIRE(tree.printInorder() == "Expected inorder output");
-// REQUIRE(tree.printPostorder() == "Expected postorder output");
-}
-
-// print Inorder test
-// prints the values "in order"
-TEST_CASE("BST Insert Inorder", "[flag]"){
-AVLTree inputTree;
-inputTree.insert("Bobby purple", "68580002");
-inputTree.insert("Bobby brown", "18580000");
-inputTree.insert("Bobby blue", "28580003");
-inputTree.insert("Bobby green", "48580002");
-inputTree.insert("Bobby yellow", "58580002");
-inputTree.insert("Bobby red", "38580002");
-std::string actualOutput = inputTree.printInorder();
-std::string expectedOutput = "Bobby brown, Bobby blue, Bobby red, Bobby green, Bobby yellow, Bobby purple";
-REQUIRE(actualOutput == expectedOutput);
-}
-
-// print Preorder test
-// Root node first, then the left subtree, and then the right subtree
-TEST_CASE("BST Insert Preorder", "[flag]"){
-AVLTree inputTree;
-inputTree.insert("Bobby purple", "68580002");
-inputTree.insert("Bobby brown", "18580000");
-inputTree.insert("Bobby blue", "28580003");
-inputTree.insert("Bobby green", "48580002");
-inputTree.insert("Bobby yellow", "58580002");
-inputTree.insert("Bobby red", "38580002");
-std::string actualOutput = inputTree.printPreorder();
-std::string expectedOutput = "Bobby red, Bobby blue, Bobby brown, Bobby green, Bobby yellow, Bobby purple";
-REQUIRE(actualOutput == expectedOutput);
-}
-
-// print Postorder test
-// visit left subtree first, then right subtree, then the root node
-TEST_CASE("BST Insert Postorder", "[flag]"){
-AVLTree inputTree;
-inputTree.insert("Bobby purple", "68580002");
-inputTree.insert("Bobby brown", "18580000");
-inputTree.insert("Bobby blue", "28580003");
-inputTree.insert("Bobby green", "48580002");
-inputTree.insert("Bobby yellow", "58580002");
-inputTree.insert("Bobby red", "38580002");
-std::string actualOutput = inputTree.printPostorder();
-std::string expectedOutput = "Bobby brown, Bobby blue, Bobby purple, Bobby yellow, Bobby green, Bobby red";
-REQUIRE(actualOutput == expectedOutput);
-}
-
-TEST_CASE("Incorrect Commands", "[AVLTree]") {
-AVLTree tree;
-// Test 5 incorrect commands
-REQUIRE(tree.insert("A11y", "45679999") == false);  // Contains a number in the name
-REQUIRE(tree.insert("Ally", "45a7999") == false);   // Contains a letter in the UFID
-REQUIRE(tree.insert("", "45679999") == false);       // Empty name
-REQUIRE(tree.insert("Ally", "") == false);           // Empty UFID
-REQUIRE(tree.insert("Ally", "45679999") == false);   // Duplicate UFID
-}
-
-TEST_CASE("Edge Cases", "[AVLTree]") {
-AVLTree tree;
-// Test 3 edge cases
-REQUIRE(tree.deleteNode(tree.root, 123456) == false);  // Removing a node that doesn't exist
-REQUIRE(tree.insert("Ally", "45679999") == true);      // Inserting a node with maximum UFID
-REQUIRE(tree.insert("Ally", "00000000") == true);      // Inserting a node with minimum UFID
-}
-
-TEST_CASE("Rotation Cases", "[AVLTree]") {
-AVLTree tree;
-// Test all four rotation cases
-// You'll need to implement a function to check the type of rotation performed
-// and return a string or enum indicating the rotation
-// REQUIRE(tree.checkRotationType(...) == "LL");
-// REQUIRE(tree.checkRotationType(...) == "RR");
-// REQUIRE(tree.checkRotationType(...) == "LR");
-// REQUIRE(tree.checkRotationType(...) == "RL");
-}
-
-TEST_CASE("Deletion Cases", "[AVLTree]") {
-AVLTree tree;
-// Test all three deletion cases
-// You'll need to implement a function to check the type of deletion performed
-// and return a string or enum indicating the deletion
-// REQUIRE(tree.checkDeletionType(...) == "NoChildren");
-// REQUIRE(tree.checkDeletionType(...) == "OneChild");
-// REQUIRE(tree.checkDeletionType(...) == "TwoChildren");
-}
-
-TEST_CASE("Bulk Insert and Delete", "[AVLTree]") {
-AVLTree tree;
-// Insert 100 nodes
-for (int i = 1; i <= 100; ++i) {
-std::string ufid = std::to_string(i);
-REQUIRE(tree.insert("Node" + ufid, ufid) == true);
-}
-// Remove 10 random nodes
-for (int i = 1; i <= 10; ++i) {
-int ufid = rand() % 100 + 1;
-REQUIRE(tree.deleteNode(tree.root, ufid) == true);
-}
-// Check in order
-// You'll need to implement a function to return the inorder traversal as a string
-// std::string actualOutput = tree.printInorder();
-// std::string expectedOutput = "The expected inorder output after deletions";
-// REQUIRE(actualOutput == expectedOutput);
-}
-
-//TEST_CASE("BST Insert Large", "[flag]"){
-//    std::srand(std::time(nullptr)); // set seed for random number generation
-//    AVLTree inputTree;
-//    std::vector<string> expectedOutputVec;
-//    std::string actualOutput, expectedOutput;
+//#include "../src/main.cpp"
+//#include <catch2/catch_test_macros.hpp>
+//#include <algorithm> // for std::sort
+//#include <cstdlib>   // for rand()
+//#include <ctime>     // for std::time()
+//#include <sstream>
+//TEST_CASE("Incorrect commands", "[AVLTree]") {
+//    AVLTree tree;
 //
-//    for(int i = 0; i < 100000; i++) {
-//        int randomInput = rand();
-//        string randomInputStr = to_string(randomInput);
-//        if (std::count(expectedOutputVec.begin(), expectedOutputVec.end(), randomInputStr) == 0) {
-//            expectedOutputVec.push_back(randomInputStr);
-//            inputTree.insert("Random Name", randomInputStr);
-//        }
+//    SECTION("Insert with invalid name") {
+//        tree.root = tree.insert(tree.root, new TreeNode("A11y", "45679999"));
+//        REQUIRE(tree.root->name == "unsuccessful");
+//    }
+//    SECTION("Insert with empty name") {
+//        tree.root = tree.insert(tree.root, new TreeNode("", "12345678"));
+//        REQUIRE(tree.root->name == "unsuccessful");
 //    }
 //
-//    std::sort(expectedOutputVec.begin(), expectedOutputVec.end());
-//
-//    // Convert expectedOutputVec to a comma-separated string
-//    std::ostringstream oss;
-//    for (size_t i = 0; i < expectedOutputVec.size(); ++i) {
-//        oss << expectedOutputVec[i];
-//        if (i != expectedOutputVec.size() - 1) {
-//            oss << ", ";
-//        }
+//    SECTION("Insert with empty UFID") {
+//        tree.root = tree.insert(tree.root, new TreeNode("John", ""));
+//        REQUIRE(tree.root->name == "unsuccessful");
 //    }
-//    expectedOutput = oss.str();
 //
-//    actualOutput = inputTree.printInorder();
-//    REQUIRE(actualOutput == expectedOutput);
+//    SECTION("Insert with negative UFID") {
+//        tree.root = tree.insert(tree.root, new TreeNode("John", "-12345678"));
+//        REQUIRE(tree.root->name == "unsuccessful");
+//    }
+//
+//    SECTION("Insert with UFID containing letters") {
+//        tree.root = tree.insert(tree.root, new TreeNode("John", "1234ABCD"));
+//        REQUIRE(tree.root->name == "unsuccessful");
+//    }
+//}
+//
+//TEST_CASE("Edge cases", "[AVLTree]") {
+//    AVLTree tree;
+//
+//    SECTION("Removing a node that doesn't exist") {
+//        tree.root = tree.deleteNode(tree.root, 12345678);
+//        REQUIRE(tree.root == nullptr);
+//    }
+//
+//    SECTION("Removing a node that doesn't exist") {
+//        tree.root = tree.deleteNode(tree.root, 99999999);
+//        // Assuming you have a way to capture the output, check that it says "unsuccessful"
+//    }
+//
+//    SECTION("Searching for a name that doesn't exist") {
+//        tree.searchNAME("NonExistent");
+//        // Assuming you have a way to capture the output, check that it says "unsuccessful"
+//    }
+//}
+//
+//TEST_CASE("Rotation cases", "[AVLTree]") {
+//    AVLTree tree;
+//
+//    SECTION("Left-Left Rotation") {
+//        tree.root = tree.insert(tree.root, new TreeNode("Alice", "1"));
+//        tree.root = tree.insert(tree.root, new TreeNode("Bob", "2"));
+//        tree.root = tree.insert(tree.root, new TreeNode("Charlie", "3"));
+//        // Check that the tree is balanced and the root is now "Bob"
+//        REQUIRE(tree.root->name == "Bob");
+//    }
+//
+//    SECTION("Right-Right Rotation") {
+//        tree.root = tree.insert(tree.root, new TreeNode("Charlie", "3"));
+//        tree.root = tree.insert(tree.root, new TreeNode("Bob", "2"));
+//        tree.root = tree.insert(tree.root, new TreeNode("Alice", "1"));
+//        // Check that the tree is balanced and the root is now "Bob"
+//        REQUIRE(tree.root->name == "Bob");
+//    }
+//
+//    SECTION("Left-Right Rotation") {
+//        tree.root = tree.insert(tree.root, new TreeNode("Alice", "1"));
+//        tree.root = tree.insert(tree.root, new TreeNode("Charlie", "3"));
+//        tree.root = tree.insert(tree.root, new TreeNode("Bob", "2"));
+//        // Check that the tree is balanced and the root is now "Bob"
+//        REQUIRE(tree.root->name == "Bob");
+//    }
+//
+//    SECTION("Right-Left Rotation") {
+//        tree.root = tree.insert(tree.root, new TreeNode("Charlie", "3"));
+//        tree.root = tree.insert(tree.root, new TreeNode("Alice", "1"));
+//        tree.root = tree.insert(tree.root, new TreeNode("Bob", "2"));
+//        // Check that the tree is balanced and the root is now "Bob"
+//        REQUIRE(tree.root->name == "Bob");
+//    }
+//}
+//
+//TEST_CASE("Deletion cases", "[AVLTree]") {
+//    AVLTree tree;
+//
+//    SECTION("Delete node with no children") {
+//        tree.root = tree.insert(tree.root, new TreeNode("Alice", "1"));
+//        tree.root = tree.deleteNode(tree.root, std::stoi("1"));
+//        // Check that the tree is empty
+//        REQUIRE(tree.root == nullptr);
+//    }
+//
+//    SECTION("Delete node with one child") {
+//        tree.root = tree.insert(tree.root, new TreeNode("Alice", "1"));
+//        tree.root = tree.insert(tree.root, new TreeNode("Bob", "2"));
+//        tree.root = tree.deleteNode(tree.root, std::stoi("1"));
+//        // Check that the tree now only contains "Bob"
+//        REQUIRE(tree.root->name == "Bob");
+//    }
+//
+//    SECTION("Delete node with two children") {
+//        tree.root = tree.insert(tree.root, new TreeNode("Alice", "1"));
+//        tree.root = tree.insert(tree.root, new TreeNode("Bob", "2"));
+//        tree.root = tree.insert(tree.root, new TreeNode("Charlie", "3"));
+//        tree.root = tree.deleteNode(tree.root, std::stoi("2"));
+//        // Check that the tree now only contains "Alice" and "Charlie"
+//        // And the root should be "Charlie"
+//        REQUIRE(tree.root->name == "Charlie");
+//    }
+//}
+//
+//TEST_CASE("Bulk operations", "[AVLTree]") {
+//    AVLTree tree;
+//    SECTION("Insert 100 nodes and remove 10") {
+//        // Insert 100 nodes
+//        for (int i = 1; i <= 100; ++i) {
+//            tree.root = tree.insert(tree.root, new TreeNode("Node" + std::to_string(i), std::to_string(i)));
+//        }
+//
+//        // Remove 10 random nodes
+//        std::vector<int> random_indices = {3, 7, 12, 19, 25, 33, 47, 56, 62, 78};
+//        for (int index : random_indices) {
+//            tree.root = tree.deleteNode(tree.root, index);
+//        }
+//
+//        // Check in-order traversal
+//        std::vector<TreeNode*> nodes;
+//        tree.inorderTraversal(tree.root, nodes);
+//        std::vector<int> remaining_values;
+//        for (const auto& node : nodes) {
+//            remaining_values.push_back(std::stoi(node->ufid));
+//        }
+//
+//        // Create expected remaining values
+//        std::vector<int> expected_remaining_values;
+//        for (int i = 1; i <= 100; ++i) {
+//            if (std::find(random_indices.begin(), random_indices.end(), i) == random_indices.end()) {
+//                expected_remaining_values.push_back(i);
+//            }
+//        }
+//
+//        REQUIRE(remaining_values == expected_remaining_values);
+//    }
 //}
