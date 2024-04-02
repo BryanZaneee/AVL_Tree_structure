@@ -155,6 +155,7 @@ public:
                 TreeNode * temp = minValueNode(r->right);
                 // Copy the inorder successor's content to this node
                 r->ufid = temp->ufid;
+                r->name = temp->name;  // <-- Add this line
                 // Delete the inorder successor
                 r->right = deleteNode(r->right, std::stoi(temp->ufid));
             }
@@ -299,7 +300,6 @@ public:
         }
         searchNAMEHelper(r->right, name, ids);
     }
-
 };
 
 int main() {
@@ -327,10 +327,10 @@ int main() {
             string name = remaining_line.substr(2, last_quote - 2);
             string ufid = remaining_line.substr(last_quote + 2);
 
-            // Validate that the name contains only alphabetic characters
+            // Validate that the name contains only alphabetic characters and spaces
             bool validName = true;
             for (char c : name) {
-                if (isdigit(c)) {
+                if (!isalpha(c) && c != ' ') {  // Allow spaces along with alphabets
                     validName = false;
                     break;
                 }
