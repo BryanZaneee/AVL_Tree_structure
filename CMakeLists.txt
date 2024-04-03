@@ -3,23 +3,28 @@ project(AVLTree_complete)
 
 set(CMAKE_CXX_STANDARD 14)
 
-##recommended by aman to match test environment, just like GradeScope
-#set(GCC_COVERAGE_COMPILE_FLAGS "-Wall -Werror")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
-
-#pull in desired version of catch through cmake automatically, make it available
 Include(FetchContent)
 FetchContent_Declare(
-        Catch2
-        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-        GIT_TAG        v3.0.1 # or a later release
+    Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG v3.0.1
 )
 FetchContent_MakeAvailable(Catch2)
 
-add_executable(AVLTree_complete src/main.cpp
-        src/AVL.cpp)
+add_library(AVL STATIC 
+    src/AVL.cpp 
+    src/AVL.h
+)
 
-add_executable(Tests test-unit/test.cpp src/AVL.cpp)
+add_executable(AVLTree_complete 
+    src/main.cpp
+)
+target_link_libraries(AVLTree_complete AVL)
 
-target_link_libraries(Tests PRIVATE Catch2::Catch2WithMain) #link catch to test.cpp file
-#if your testing executable is named Project1, change Tests in the line above to Project1
+add_executable(Tests 
+    testing/test.cpp
+)
+target_link_libraries(Tests AVL Catch2::Catch2WithMain)
+
+# Set the include path for Catch2
+target_include_directories(Tests PRIVATE ${Catch2_SOURCE_DIR}/single_include)
