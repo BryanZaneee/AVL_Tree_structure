@@ -66,21 +66,19 @@ TreeNode* AVLTree::leftRotate(TreeNode* x) {
 }
 
 // Inserts a new node into the tree and rebalances if necessary
-TreeNode* AVLTree::insert(TreeNode* r, TreeNode* new_node) {
-    int new_value = std::stoi(new_node->ufid);
+TreeNode* AVLTree::insert(TreeNode* r, const std::string& name, const std::string& ufid) {
     if (r == nullptr) {
-        r = new_node;
         std::cout << "successful" << std::endl;
-        return r;
+        return new TreeNode(name, ufid);
     }
 
-    // If the new node's value is less than the root's value, insert it in the left subtree
+    int new_value = std::stoi(ufid);
     int r_value = std::stoi(r->ufid);
+
     if (new_value < r_value) {
-        r->left = insert(r->left, new_node);
-    // If the new node's value is greater than the root's value, insert it in the right subtree
+        r->left = insert(r->left, name, ufid);
     } else if (new_value > r_value) {
-        r->right = insert(r->right, new_node);
+        r->right = insert(r->right, name, ufid);
     } else {
         std::cout << "unsuccessful" << std::endl;
         return r;
@@ -166,25 +164,37 @@ TreeNode* AVLTree::deleteNode(TreeNode* r, int v) {
 }
 
 // Traverses the tree in inorder and stores the nodes in a vector
-void AVLTree::inorderTraversal(TreeNode* r, std::vector<TreeNode*>& nodes) {
-    if (r == nullptr)
-        return;
-    inorderTraversal(r->left, nodes);
-    nodes.push_back(r);
-    inorderTraversal(r->right, nodes);
+// void AVLTree::inorderTraversal(TreeNode* r, std::vector<TreeNode*>& nodes) {
+//     if (r == nullptr)
+//         return;
+//     inorderTraversal(r->left, nodes);
+//     nodes.push_back(r);
+//    inorderTraversal(r->right, nodes);
+// }
+
+TreeNode* AVLTree::findNthInorder(TreeNode* root, int n, int& count) {
+    if (root == nullptr) return nullptr;
+
+    TreeNode* left = findNthInorder(root->left, n, count);
+    if (left) return left;
+
+    if (count == n) return root;
+    count++;
+
+    return findNthInorder(root->right, n, count);
 }
 
 // Removes the nth node in inorder traversal
+// Modified to use findNthInorder for more efficient operation
 void AVLTree::removeInorder(TreeNode*& root, int n) {
-    std::vector<TreeNode*> nodes;
-    inorderTraversal(root, nodes);
-    if (n < 0 || n >= nodes.size()) {
+    int count = 0;
+    TreeNode* node_to_delete = findNthInorder(root, n, count);
+    if (node_to_delete) {
+        root = deleteNode(root, std::stoi(node_to_delete->ufid));
+        std::cout << "successful" << std::endl;
+    } else {
         std::cout << "unsuccessful" << std::endl;
-        return;
     }
-    TreeNode* node_to_delete = nodes[n];
-    root = deleteNode(root, std::stoi(node_to_delete->ufid));
-    std::cout << "successful" << std::endl;
 }
 
 // Prints the tree nodes in inorder
@@ -247,9 +257,9 @@ TreeNode* AVLTree::recursiveSearch(TreeNode* r, std::string val) const {
     }
 }
 
-// Searches for a node by its UFID and prints the name
-void AVLTree::searchID(std::string ufid) {
-    TreeNode* result = recursiveSearch(this->root, ufid);
+// Update these function signatures to match the header file:
+void AVLTree::searchID(std::string_view ufid) {
+    TreeNode* result = recursiveSearch(this->root, std::string(ufid));
     if (result != nullptr) {
         std::cout << result->name << std::endl;
     } else {
@@ -257,10 +267,9 @@ void AVLTree::searchID(std::string ufid) {
     }
 }
 
-// Searches for nodes by their name and prints their UFIDs
-void AVLTree::searchNAME(std::string name) {
+void AVLTree::searchNAME(std::string_view name) {
     std::vector<std::string> ids;
-    searchNAMEHelper(this->root, name, ids);
+    searchNAMEHelper(this->root, std::string(name), ids);
     if (!ids.empty()) {
         for (const std::string& id : ids) {
             std::cout << id << std::endl;
@@ -270,8 +279,7 @@ void AVLTree::searchNAME(std::string name) {
     }
 }
 
-// Helper function for searchNAME to find nodes by name and store their UFIDs in a vector
-void AVLTree::searchNAMEHelper(TreeNode* r, const std::string& name, std::vector<std::string>& ids) {
+void AVLTree::searchNAMEHelper(TreeNode* r, const std::string& name, std::vector<std::string>& ids) const {
     if (r == nullptr) {
         return;
     }
